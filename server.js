@@ -7,9 +7,9 @@ const app = express();
 
 // FIELDS
 const port = process.env.PORT || 8000;
-const username = /* FIll IN */ '';
-const pass = /* FIll IN */ '';
-const collection = /* FIll IN */ '';
+const username = 'arcade';
+const pass = 'kPpFtrxsZ4En2zcN';
+const collection = 'arcade';
 const connectionString = `mongodb+srv://${username}:${pass}@cluster0.56mug.mongodb.net/${collection}?retryWrites=true&w=majority`; // Cluster might need to change
 
 // DATABASE

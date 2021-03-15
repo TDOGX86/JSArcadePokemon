@@ -20,7 +20,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     const db = client.db(collection)
     const dbName = db.collection('quotes')
     
-    console.log('Connected to database:', dbName)
+    console.log('Connected to database')
 
     // RENDER ENGINE
     app.set('view engine', 'ejs')

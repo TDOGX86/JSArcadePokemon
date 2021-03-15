@@ -32,7 +32,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
 
     // CRUD HANDLERS    
     app.get('/', (req, res) => {
-        res.send({ connection: "Successful"})
+        res.render('index.ejs')
     })
 
     // SERVER LISTENING

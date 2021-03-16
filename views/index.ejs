@@ -10,24 +10,33 @@
     <title>Arcade</title>
 
     <!-- CSS Start -->
-    <link href="../public/assets/style.css" rel="stylesheet" type="text/css">
-    <link href="../public/assets/card/card.css" rel="stylesheet" type="text/css" 
+    <link rel="stylesheet" href="../public/assets/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="../public/assets/css/dark.css" type="text/css">
+    <link rel="stylesheet" href="../public/assets/css/font-icons.css" type="text/css">
+    <link rel="stylesheet" href="../public/assets/css/animate.css" type="text/css">
+    <link rel="stylesheet" href="../public/assets/css/magnific-popup.css" type="text/css">
+
+    <link href="../public/assets/css/style.css" rel="stylesheet" type="text/css">
+    <link href="../public/assets/card/card.css" rel="stylesheet" type="text/css"
     /><!-- #css end -->
 
   </head>
   <body>
-
-    <!-- HEADER -->
+    
+    <!-- Header
+    ============================================= -->
     <header>
-      <%- include('./partials/header'); %>
+      <%- include('./partials/card'); %>
     </header>
 
-    <!-- CONTENT -->
-    <%- include('./partials/card'); %>
+    <%- include('./partials/header'); %>
 
     <!-- Script Start -->
-    <script src="../public/assets/script.js" defer></script>
-    <script src="../public/assets/card/card.js" defer>
+    <script src="../public/assets/card/card.js" defer></script>
+    <script src="../public/assets/scripts/script.js" defer></script>
+    <script src="../public/assets/scripts/jquery.js"></script>
+    <script src="../public/assets/scripts/plugins.min.js"></script>
+    <script src="../public/assets/scripts/functions.js">
     </script><!-- #script end -->
 
   </body>

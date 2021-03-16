@@ -8,7 +8,7 @@ const app = express();
 // FIELDS
 const port = process.env.PORT || 8000;
 const username = 'arcade';
-const pass = 'kPpFtrxsZ4En2zcN';
+const pass = 'bootcamp2020b!';
 const collection = 'arcade';
 const connectionString = `mongodb+srv://${username}:${pass}@cluster0.56mug.mongodb.net/${collection}?retryWrites=true&w=majority`; // Cluster might need to change
 
@@ -28,7 +28,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     // MIDDLEWARE
     app.use(express.urlencoded({ extended: true }))
     app.use(express.json())
-    app.use(express.static('public'))
+    app.use('/public', express.static('public'))
 
     // CRUD HANDLERS    
     app.get('/', (req, res) => {

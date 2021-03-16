@@ -36,6 +36,10 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
         res.render('index.ejs')
     })
 
+    app.get('/pokemon', (req, res) => {
+        res.render('pokemon.ejs')
+    })
+
     // app.get("/user", (req,res) => {
     //     fetch("https://pokeapi.co/api/v2/pokemon/" +randomPokemonGenerator())
     //     .then((res) => res.json())

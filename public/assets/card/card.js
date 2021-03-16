@@ -1,7 +1,7 @@
 /* Credit to Simon Goellner, https://codepen.io/simeydotme/pen/PrQKgo, for creating the following javascript */
 
 const cards = [...document.querySelectorAll(".card")];
-const style = [...document.querySelectorAll("style")][0]
+const style = document.querySelector("style")
 
 cards.forEach(card => {
     card.addEventListener('mousemove', (e) => {

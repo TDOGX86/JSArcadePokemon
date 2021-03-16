@@ -2,46 +2,30 @@
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const fetch = require("node-fetch");
+const port = process.env.PORT || 8100;
+var mongoose = require("mongoose");
+var passport = require("passport");
+var flash = require("connect-flash");
+var morgan = require("morgan");
+var cookieParser = require("cookie-parser");
+var session = require("express-session");
 
 // INSTANCE
 const app = express();
 
-// FIELDS
-const port = process.env.PORT || 8080;
-const username = "arcade";
-const pass = "bootcamp2020b!";
-const collection = "arcade";
-const connectionString = `mongodb+srv://${username}:${pass}@cluster0.56mug.mongodb.net/${collection}?retryWrites=true&w=majority`; // Cluster might need to change
+// Database info
+var configDB = require("./app/config/database.js");
+var db;
 
 // DATABASE
-MongoClient.connect(
-  connectionString,
-  { useUnifiedTopology: true },
-  (err, client) => {
-    if (err) return console.error(err);
-
-    // DATABASE FIELDS
-    const db = client.db(collection);
-    const dbName = db.collection("quotes");
-
-    console.log("Connected to database");
-
-    // RENDER ENGINE
-    app.set("view engine", "ejs");
-
-    // MIDDLEWARE
-    app.use(express.urlencoded({ extended: true }));
-    app.use(express.json());
-    app.use("/public", express.static("public"));
-
-    // CRUD HANDLERS
-    app.get("/", (req, res) => {
-      res.render("index.ejs");
-    });
-
-    app.get("/pokemon", (req, res) => {
-      res.render("pokemon.ejs");
-    });
+mongoose.connect(
+  configDB.url,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err, database) => {
+    if (err) return console.log(err);
+    db = database;
+    //ACCESS ROUTES
+    require("./app/routes/main.js")(app, passport, db);
 
     // app.get("/user", (req,res) => {
     //     fetch("https://pokeapi.co/api/v2/pokemon/" +randomPokemonGenerator())
@@ -115,10 +99,29 @@ MongoClient.connect(
     function randomPokemonGenerator() {
       return Math.floor(Math.random() * 150);
     }
-
-    // SERVER LISTENING
-    app.listen(port, () => {
-      console.log("Node is live and listening on:", port);
-    });
   }
 );
+
+require("./app/config/passport")(passport); // passport configuration
+
+app.use(morgan("dev")); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(express.json()); // get information from html forms
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public")); // access public resources
+app.set("view engine", "ejs"); // set up ejs for templating
+
+app.use(
+  session({
+    // passport sessions
+    secret: "pokEmon", // session secret...DONT TELL ANYONE
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); //  for flash messages in session
+
+app.listen(port);
+console.log("The magic happens on port " + port);

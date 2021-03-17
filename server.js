@@ -1,7 +1,5 @@
 // IMPORT
 const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
-const fetch = require("node-fetch");
 const port = process.env.PORT || 8100;
 const mongoose = require("mongoose");
 var passport = require("passport");
@@ -9,7 +7,6 @@ var flash = require("connect-flash");
 var morgan = require("morgan");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
-const pokemonSchema = require("./app/models/pokemon");
 
 // INSTANCE
 const app = express();
@@ -17,7 +14,6 @@ const app = express();
 // Database info
 var configDB = require("./app/config/database.js");
 var db;
-const url = `https://pokeapi.co/api/v2/pokemon/`;
 // DATABASE
 mongoose.connect(
   configDB.url,

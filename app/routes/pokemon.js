@@ -89,9 +89,3 @@ module.exports = function (app, passport, db) {
     res.status(200).send({ msg: "Success!" });
   });
 };
-// Authentication middleware
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) return next();
-
-  res.redirect("/");
-}

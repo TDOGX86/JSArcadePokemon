@@ -4,13 +4,13 @@ module.exports = function (app, passport, db) {
     res.render("index.ejs");
   });
   //====================PROFILE=========================
-  app.get("/profile", isLoggedIn, function (req, res) {
+  app.get("/profile", function (req, res) {
     res.render("profile.ejs", {
       user: req.user,
     });
   });
   //====================Pokemon=========================
-  app.get("/pokemon", isLoggedIn, function (req, res) {
+  app.get("/pokemon", function (req, res) {
     res.render("pokemon.ejs");
   });
   //====================LOGOUT=========================

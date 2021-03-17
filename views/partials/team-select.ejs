@@ -1,10 +1,6 @@
 <% team.forEach( pokemon => { %>
-    <p>ID: <%= pokemon.id %></p>
-    <p>Name: <%= pokemon.name %></p>
-    <p>Type: <%= pokemon.type %></p>
-    <p>Moves: <%= pokemon.moves %></p>
-    <p>Hp: <%= pokemon.hp %></p>
-    <p>Attack: <%= pokemon.attack %></p>
-    <p>Defense: <%= pokemon.defense %></p>
-    <p>Speed: <%= pokemon.speed %></p>
+    <section>
+        <span>ID: <%= pokemon.id %>, </span>
+        <span>Name: <%= pokemon.name %></span>
+    </section>
 <% }) %>

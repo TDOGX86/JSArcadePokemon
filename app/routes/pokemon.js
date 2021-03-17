@@ -57,9 +57,8 @@ module.exports = function (app, passport, db) {
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
     Promise.all(promises).then((results) => {
-      console.log(grabPokemon(results));
+      res.status(200).render('profile.ejs', { team: grabPokemon(results) });
     });
-    res.status(200).send({ msg: "Success!" });
   });
 
   // add 6 random pokemon

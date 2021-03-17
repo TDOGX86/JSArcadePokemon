@@ -1,4 +1,4 @@
-// IMPORT
+// IMPORTS
 const express      = require("express");
 const mongoose     = require("mongoose");
 const passport     = require("passport");
@@ -13,17 +13,19 @@ const app = express();
 
 // FIELDS
 const port = process.env.PORT || 8100;
-let db;
 
 // DATABASE
 mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, database) => {
     if (err) return console.log(err);
 
-    db = database;
+    const db = database;
     require("./app/config/passport")(passport);   // passport configuration
     
+    // RENDER ENGINE
     app.set("view engine", "ejs");                // set up ejs for templating
-    app.use(morgan("dev"));                       // log every request to the console
+
+    // MIDDLEWARE
+    //app.use(morgan("dev"));                     // log every request to the console
     app.use(cookieParser());                      // read cookies (needed for auth)
     app.use(express.json());                      // get information from html forms
     app.use(express.urlencoded({ extended: true }));
@@ -38,10 +40,10 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     app.use(passport.session());
     app.use(flash());                             //  for flash messages in session
     
-    //ACCESS ROUTES
-    require("./app/routes/main.js")(app, passport, db);
+    // CRUD ACCESS ROUTES
+    require("./app/routes/main.js")   (app, passport, db);
     require("./app/routes/pokemon.js")(app, passport, db);
-    require("./app/routes/battle.js")(app, passport, db);
+    require("./app/routes/battle.js") (app, passport, db);
   }
 );
 

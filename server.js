@@ -25,6 +25,7 @@ mongoose.connect(
     //ACCESS ROUTES
     require("./app/routes/main.js")(app, passport, db);
     require("./app/routes/pokemon.js")(app, passport, db);
+    require("./app/routes/battle.js")(app, passport, db);
   }
 );
 

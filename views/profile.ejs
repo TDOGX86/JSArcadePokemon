@@ -12,6 +12,9 @@
 
     <!-- Content
     ============================================= -->
-    <main><%- include('./partials/profile'); %></main>
+    <main>
+      <%- include('./partials/profile'); %> <%-
+      include('./partials/team-select', { team }); %>
+    </main>
   </body>
 </html>

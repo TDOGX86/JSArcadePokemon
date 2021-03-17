@@ -9,7 +9,6 @@ const session        = require("express-session");
 const configDB       = require("./app/config/database.js");
 const fetch          = require("node-fetch");
 const pokemonSchema  = require("./app/models/pokemon");
-const pokemon = require("./app/routes/pokemon.js");
 
 // INSTANCE
 const app = express();

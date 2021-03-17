@@ -21,9 +21,8 @@ var db;
 
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
-  return Math.floor(Math.random() * 100);
+  return Math.floor(Math.random() * 150);
 }
-
 // DATABASE
 mongoose.connect(
   configDB.url,
@@ -102,11 +101,6 @@ mongoose.connect(
       });
       res.status(200).send({ msg: "Success!" });
     });
-
-    // function to call a random pokemon from the API
-    function randomPokemonGenerator() {
-      return Math.floor(Math.random() * 150);
-    }
   }
 );
 

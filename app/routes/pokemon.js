@@ -99,7 +99,11 @@ module.exports = function (app, passport, db) {
     });
     await Promise.all(promises)
       .then((info) => {
-        res.send(grabPokemon(info));
+        let response = {
+          player1: grabPokemon(info).slice(0, 6),
+          player2: grabPokemon(info).slice(6),
+        };
+        res.send(response);
       })
       .catch((err) => console.log(err));
   });

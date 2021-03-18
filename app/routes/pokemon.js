@@ -58,6 +58,32 @@ module.exports = function (app, passport, db) {
     });
   });
 
+  app.get("/cool", isLoggedIn, async (req, res) => {
+    let team = "50-24-13-7-58-9".split("-");
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
+      return fetch(url + num).then((info) => info.json());
+    });
+    await Promise.all(promises)
+      .then(async (team) => {
+        let filter = {
+          email: req.user.local.email,
+        };
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(team).slice(0, 6),
+          player2: grabPokemon(team).slice(6),
+        };
+        await battleSchema.updateOne({ ...filter }, newBattle, {
+          upsert: true,
+        });
+        res.status(200).render("pokemon.ejs", newBattle);
+      })
+      .catch((err) => console.log(err));
+  });
+
   // add 6 random pokemon
   app.get("/randomOpponent", (req, res) => {
     const promises = [];
@@ -84,7 +110,7 @@ module.exports = function (app, passport, db) {
   });
 
   // post grab teams
-  app.post("/team", async (req, res) => {
+  app.post("/team", isLoggedIn, async (req, res) => {
     let team = req.body.team.split("-");
     let randomOpponent = new Array(6)
       .fill()
@@ -93,17 +119,27 @@ module.exports = function (app, passport, db) {
       return fetch(url + num).then((info) => info.json());
     });
     await Promise.all(promises)
-      .then((team) => {
-        let newBattle = {
-          email: req.body.email,
-          player1: team.slice(0, 6),
-          player2: team.slice(6),
+      .then(async (team) => {
+        let filter = {
+          email: req.user.local.email,
         };
-        battleSchema
-          .replaceOne({ email: req.body.email }, newBattle, { upsert: true })
-          .catch((err) => console.log(err));
-        res.send(newBattle);
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(team).slice(0, 6),
+          player2: grabPokemon(team).slice(6),
+        };
+        await battleSchema.updateOne({ ...filter }, newBattle, {
+          upsert: true,
+        });
+        res.status(200).render("pokemon.ejs", newBattle);
       })
       .catch((err) => console.log(err));
   });
 };
+
+// Authentication middleware
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) return next();
+
+  res.redirect("/login");
+}

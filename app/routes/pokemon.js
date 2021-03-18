@@ -66,9 +66,7 @@ module.exports = function (app, passport, db) {
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
     Promise.all(promises).then((results) => {
-      //console.log(results);
       res.send(grabPokemon(results));
-      //console.log(grabPokemon(results));
     });
   });
 
@@ -95,21 +93,16 @@ module.exports = function (app, passport, db) {
       return fetch(url + num).then((info) => info.json());
     });
     await Promise.all(promises)
-      .then((info) => {
-        let filter = { email: req.body.email };
+      .then((team) => {
         let newBattle = {
-          ...filter,
-          player1: grabPokemon(info).slice(0, 6),
-          player2: grabPokemon(info).slice(6),
+          email: req.body.email,
+          player1: team.slice(0, 6),
+          player2: team.slice(6),
         };
-        battleSchema.findOneAndUpdate(
-          filter,
-          newBattle,
-          { upsert: true, new: true },
-          (err, doc) => {
-            res.send(doc);
-          }
-        );
+        battleSchema
+          .replaceOne({ email: req.body.email }, newBattle, { upsert: true })
+          .catch((err) => console.log(err));
+        res.send(newBattle);
       })
       .catch((err) => console.log(err));
   });

@@ -96,7 +96,7 @@ module.exports = function (app, passport, db) {
     });
     await Promise.all(promises)
       .then((info) => {
-        let filter = { email: req.user.local.email };
+        let filter = { email: req.body.email };
         let newBattle = {
           ...filter,
           player1: grabPokemon(info).slice(0, 6),

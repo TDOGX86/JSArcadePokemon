@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const pokeCard = require("../config/pokeCard");
 const bodyParser = require("body-parser");
-const pokemonSchema = require("../models/pokemon")
+const pokemonSchema = require("../models/pokemon");
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 // middleware
@@ -90,17 +90,21 @@ module.exports = function (app, passport, db) {
     res.status(200).send({ msg: "Success!" });
   });
 
-  // post grab teams 
+  // post grab teams
   app.post("/team", async (req, res) => {
     let team = req.body.team.split("-");
-    let promises = team.map((num) => {
+    let randomOpponent = new Array(6).fill().map((_, i) => i);
+    let promises = team.concat(randomOpponent).map((num) => {
       return fetch(url + num).then((info) => info.json());
     });
     await Promise.all(promises)
       .then((info) => {
-        res.send(grabPokemon(info));
+        let response = {
+          player1: grabPokemon(info).slice(0, 6),
+          player2: grabPokemon(info).slice(6),
+        };
+        res.send(response);
       })
       .catch((err) => console.log(err));
   });
-
 };

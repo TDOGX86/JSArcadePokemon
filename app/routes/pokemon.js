@@ -1,6 +1,12 @@
 const fetch = require("node-fetch");
-const pokeCard = require("../config/pokeCard")
+const express = require("express");
+const pokeCard = require("../config/pokeCard");
+const bodyParser = require("body-parser");
 let url = "https://pokeapi.co/api/v2/pokemon/";
+
+// middleware
+const app = express();
+app.use(bodyParser.json());
 
 // FUNCTIONS
 
@@ -49,7 +55,6 @@ function getPokemon(datas) {
 }
 
 module.exports = function (app, passport, db) {
-  // jeff - fixed the bug that stopped all gen1 from appearing
   app.get("/displayteam", async (req, res) => {
     const promises = [];
     const pokemonCount = 152;
@@ -58,16 +63,16 @@ module.exports = function (app, passport, db) {
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
     await Promise.all(promises).then((results) => {
-      res.status(200).render('profile.ejs', { team: grabPokemon(results) });
+      res.status(200).render("profile.ejs", { team: grabPokemon(results) });
     });
   });
-  
+
   app.get("/getCards", async (req, res) => {
     const promises = [];
     const pokeURL = `${pokeCard.url}`;
 
     promises.push(fetch(pokeURL).then((res) => res.json()));
-      
+
     await Promise.all(promises).then((results) => {
       res.status(200).send({ team: results });
     });
@@ -82,8 +87,8 @@ module.exports = function (app, passport, db) {
     }
     Promise.all(promises).then((results) => {
       //console.log(results);
-      res.send(results);
-      console.log(grabPokemon(results));
+      res.send(grabPokemon(results));
+      //console.log(grabPokemon(results));
     });
   });
 
@@ -98,5 +103,25 @@ module.exports = function (app, passport, db) {
         });
       });
     res.status(200).send({ msg: "Success!" });
+  });
+
+  app.post("/posts", (req, res) => {
+    console.log(req.body);
+  });
+
+  // let promises = Array(151).fill().map((_ , index) => {
+  // return fetch().then().then().catch(error)
+
+  app.post("/team", async (req, res) => {
+    let team = req.body.team.split("-");
+    let promises = team.map((numb) => {
+      return fetch(url + numb).then((info) => info.json());
+    });
+    console.log(promises);
+    await Promise.all(promises)
+      .then((info) => {
+        res.send({ msg: grabPokemon(info) });
+      })
+      .catch((err) => console.log(err));
   });
 };

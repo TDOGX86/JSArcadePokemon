@@ -26,6 +26,7 @@ function getPokemon(datas) {
       datas.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
       datas.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
     ],
+    imgs: [datas.sprites.front_default, datas.sprites.back_default],
     hp: datas.stats[0].base_stat,
     attack: datas.stats[1].base_stat,
     defense: datas.stats[2].base_stat,
@@ -93,15 +94,17 @@ module.exports = function (app, passport, db) {
   // post grab teams
   app.post("/team", async (req, res) => {
     let team = req.body.team.split("-");
-    let randomOpponent = new Array(6).fill().map((_, i) => i);
-    let promises = team.concat(randomOpponent).map((num) => {
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
       return fetch(url + num).then((info) => info.json());
     });
     await Promise.all(promises)
       .then((info) => {
         let response = {
-          player1: grabPokemon(info).slice(0, 6),
-          player2: grabPokemon(info).slice(6),
+          player: grabPokemon(info),
+          enemy: grabPokemon(info).slice(6),
         };
         res.send(response);
       })

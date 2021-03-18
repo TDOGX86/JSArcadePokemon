@@ -1,14 +1,8 @@
 const fetch = require("node-fetch");
-const express = require("express");
-const app = express();
 const pokeCard = require("../config/pokeCard");
-const bodyParser = require("body-parser");
 const pokemonSchema = require("../models/pokemon");
 let url = "https://pokeapi.co/api/v2/pokemon/";
-
-// middleware
-app.use(bodyParser.json());
-
+const battleSchema = require("../models/battle.js");
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
   return Math.floor(Math.random() * 150);
@@ -21,10 +15,10 @@ function getPokemon(datas) {
     name: datas.name,
     type: datas.types.map((type) => type.type.name),
     moves: [
-      datas.moves[0]?.move.name ? datas.moves[0].move.name : "Tackle",
-      datas.moves[1]?.move.name ? datas.moves[1].move.name : "Tackle",
-      datas.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
-      datas.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
+      datas.moves[0].move.name ? datas.moves[0].move.name : "Tackle",
+      datas.moves[1].move.name ? datas.moves[1].move.name : "Tackle",
+      datas.moves[2].move.name ? datas.moves[2].move.name : "Tackle",
+      datas.moves[3].move.name ? datas.moves[3].move.name : "Tackle",
     ],
     imgs: [datas.sprites.front_default, datas.sprites.back_default],
     hp: datas.stats[0].base_stat,

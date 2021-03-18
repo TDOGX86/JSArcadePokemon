@@ -3,9 +3,8 @@ let mongoose = require("mongoose");
 // define the schema for our user model
 let battleSchema = mongoose.Schema({
   email: String,
-  id: Number,
-  pokemon: Array,
-  status: String,
+  player1: Array,
+  player2: Array,
 });
 
 // create the model for users and expose it to our app

@@ -1,31 +1,11 @@
 const fetch = require("node-fetch");
+const pokeCard = require("../config/pokeCard");
+const pokemonSchema = require("../models/pokemon");
 let url = "https://pokeapi.co/api/v2/pokemon/";
-
-// FUNCTIONS
-
+const battleSchema = require("../models/battle.js");
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
   return Math.floor(Math.random() * 150);
-}
-
-// grab pokemon function with required stats
-function grabPokemon(datas) {
-  const pokemon = datas.map((data) => ({
-    id: data.id,
-    name: data.name,
-    type: data.types.map((type) => type.type.name),
-    moves: [
-      data?.moves[0]?.move.name ? data.moves[0].move.name : "Tackle",
-      data?.moves[1]?.move.name ? data.moves[1].move.name : "Tackle",
-      data?.moves[2]?.move.name ? data.moves[2].move.name : "Tackle",
-      data?.moves[3]?.move.name ? data.moves[3].move.name : "Tackle",
-    ],
-    hp: data.stats[0].base_stat,
-    attack: data.stats[1].base_stat,
-    defense: data.stats[2].base_stat,
-    speed: data.stats[5].base_stat,
-  }));
-  return pokemon;
 }
 
 // function for testing purposes for adding a single pokemon
@@ -35,16 +15,23 @@ function getPokemon(datas) {
     name: datas.name,
     type: datas.types.map((type) => type.type.name),
     moves: [
-      datas?.moves[0]?.move.name ? datas.moves[0].move.name : "Tackle",
-      datas?.moves[1]?.move.name ? datas.moves[1].move.name : "Tackle",
-      datas?.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
-      datas?.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
+      datas.moves[0]?.move.name ? datas.moves[0].move.name : "Tackle",
+      datas.moves[1]?.move.name ? datas.moves[1].move.name : "Tackle",
+      datas.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
+      datas.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
     ],
+    imgs: [datas.sprites.front_default, datas.sprites.back_default],
     hp: datas.stats[0].base_stat,
     attack: datas.stats[1].base_stat,
     defense: datas.stats[2].base_stat,
     speed: datas.stats[5].base_stat,
   };
+}
+
+// grab pokemon function with required stats
+function grabPokemon(datas) {
+  const pokemon = datas.map((data) => getPokemon(data));
+  return pokemon;
 }
 
 module.exports = function (app, passport, db) {
@@ -56,8 +43,45 @@ module.exports = function (app, passport, db) {
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
     await Promise.all(promises).then((results) => {
-      res.status(200).render('profile.ejs', { team: grabPokemon(results) });
+      res.status(200).render("profile.ejs", { team: grabPokemon(results) });
     });
+  });
+
+  app.get("/getCards", async (req, res) => {
+    const promises = [];
+    const pokeURL = `${pokeCard.url}`;
+
+    promises.push(fetch(pokeURL).then((res) => res.json()));
+
+    await Promise.all(promises).then((results) => {
+      res.status(200).send({ team: results });
+    });
+  });
+
+  app.get("/cool", isLoggedIn, async (req, res) => {
+    let team = "1-2-3-4-5-6".split("-");
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
+      return fetch(url + num).then((info) => info.json());
+    });
+    await Promise.all(promises)
+      .then(async (team) => {
+        let filter = {
+          email: req.user.local.email,
+        };
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(team).slice(0, 6),
+          player2: grabPokemon(team).slice(6),
+        };
+        await battleSchema.updateOne({ ...filter }, newBattle, {
+          upsert: true,
+        });
+        res.status(200).render("pokemon.ejs", newBattle);
+      })
+      .catch((err) => console.log(err));
   });
 
   // add 6 random pokemon
@@ -68,9 +92,7 @@ module.exports = function (app, passport, db) {
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
     Promise.all(promises).then((results) => {
-      //console.log(results);
-      res.send(results);
-      console.log(grabPokemon(results));
+      res.send(grabPokemon(results));
     });
   });
 
@@ -86,4 +108,38 @@ module.exports = function (app, passport, db) {
       });
     res.status(200).send({ msg: "Success!" });
   });
+
+  // post grab teams
+  app.post("/team", isLoggedIn, async (req, res) => {
+    let team = req.body.team.split("-");
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
+      return fetch(url + num).then((info) => info.json());
+    });
+    await Promise.all(promises)
+      .then(async (team) => {
+        let filter = {
+          email: req.user.local.email,
+        };
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(team).slice(0, 6),
+          player2: grabPokemon(team).slice(6),
+        };
+        await battleSchema.updateOne({ ...filter }, newBattle, {
+          upsert: true,
+        });
+        res.status(200).render("pokemon.ejs", newBattle);
+      })
+      .catch((err) => console.log(err));
+  });
 };
+
+// Authentication middleware
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) return next();
+
+  res.redirect("/login");
+}

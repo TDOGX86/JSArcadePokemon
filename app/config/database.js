@@ -6,5 +6,4 @@ const connectionString = `mongodb+srv://${username}:${pass}@cluster0.56mug.mongo
 
 module.exports = {
   url: connectionString,
-  dbName: "demo",
 };

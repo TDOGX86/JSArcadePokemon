@@ -4,6 +4,11 @@ const cards = [...document.querySelectorAll(".card")];
 const style = document.querySelector("style")
 
 cards.forEach(card => {
+
+    fetch('/getCards')
+        .then()
+        card.setAttribute("style", `background-image: url( ${ picture })`)
+
     card.addEventListener('mousemove', (e) => {
         const l = e.offsetX;
         const t = e.offsetY;

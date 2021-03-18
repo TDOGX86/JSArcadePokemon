@@ -105,23 +105,17 @@ module.exports = function (app, passport, db) {
     res.status(200).send({ msg: "Success!" });
   });
 
-  app.post("/posts", (req, res) => {
-    console.log(req.body);
-  });
-
-  // let promises = Array(151).fill().map((_ , index) => {
-  // return fetch().then().then().catch(error)
-
+  // post grab teams 
   app.post("/team", async (req, res) => {
     let team = req.body.team.split("-");
-    let promises = team.map((numb) => {
-      return fetch(url + numb).then((info) => info.json());
+    let promises = team.map((num) => {
+      return fetch(url + num).then((info) => info.json());
     });
-    console.log(promises);
     await Promise.all(promises)
       .then((info) => {
-        res.send({ msg: grabPokemon(info) });
+        res.send(grabPokemon(info));
       })
       .catch((err) => console.log(err));
   });
+
 };

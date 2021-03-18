@@ -59,7 +59,7 @@ module.exports = function (app, passport, db) {
   });
 
   app.get("/cool", isLoggedIn, async (req, res) => {
-    let team = "50-24-13-7-58-9".split("-");
+    let team = "1-2-3-4-5-6".split("-");
     let randomOpponent = new Array(6)
       .fill()
       .map((_) => randomPokemonGenerator());

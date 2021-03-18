@@ -1,11 +1,11 @@
 const fetch = require("node-fetch");
 const express = require("express");
+const app = express();
 const pokeCard = require("../config/pokeCard");
 const bodyParser = require("body-parser");
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 // middleware
-const app = express();
 app.use(bodyParser.json());
 
 // FUNCTIONS

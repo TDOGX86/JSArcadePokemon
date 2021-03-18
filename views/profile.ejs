@@ -2,18 +2,19 @@
 <html dir="ltr" lang="en-US">
   <!-- Head
   ============================================= -->
-  <head><%- include('./partials/head',  { title: 'Profile' }); %></head>
+  <head>
+    <%- include('./partials/head', { title: 'Profile' }); %>
+  </head>
   <body>
     <!-- Header
     ============================================= -->
-    <header><%- include('./partials/header'); %></header>
+    <header><%- include('./partials/A-header'); %></header>
 
     <!-- Content
     ============================================= -->
     <main>
-      <%- include('./partials/profile'); %>
-      <%- include('./partials/team-select'); %>
+      <%- include('./partials/profile'); %> <%-
+      include('./partials/team-select'); %>
     </main>
-
   </body>
 </html>

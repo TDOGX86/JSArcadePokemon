@@ -15,10 +15,10 @@ function getPokemon(datas) {
     name: datas.name,
     type: datas.types.map((type) => type.type.name),
     moves: [
-      datas.moves[0].move.name ? datas.moves[0].move.name : "Tackle",
-      datas.moves[1].move.name ? datas.moves[1].move.name : "Tackle",
-      datas.moves[2].move.name ? datas.moves[2].move.name : "Tackle",
-      datas.moves[3].move.name ? datas.moves[3].move.name : "Tackle",
+      datas.moves[0]?.move.name ? datas.moves[0].move.name : "Tackle",
+      datas.moves[1]?.move.name ? datas.moves[1].move.name : "Tackle",
+      datas.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
+      datas.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
     ],
     imgs: [datas.sprites.front_default, datas.sprites.back_default],
     hp: datas.stats[0].base_stat,
@@ -96,11 +96,20 @@ module.exports = function (app, passport, db) {
     });
     await Promise.all(promises)
       .then((info) => {
-        let response = {
-          player: grabPokemon(info),
-          enemy: grabPokemon(info).slice(6),
+        let filter = { email: req.body.email };
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(info).slice(0, 6),
+          player2: grabPokemon(info).slice(6),
         };
-        res.send(response);
+        battleSchema.findOneAndUpdate(
+          filter,
+          newBattle,
+          { upsert: true, new: true },
+          (err, doc) => {
+            res.send(doc);
+          }
+        );
       })
       .catch((err) => console.log(err));
   });

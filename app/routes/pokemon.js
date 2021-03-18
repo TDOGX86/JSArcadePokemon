@@ -3,36 +3,15 @@ const express = require("express");
 const app = express();
 const pokeCard = require("../config/pokeCard");
 const bodyParser = require("body-parser");
+const pokemonSchema = require("../models/pokemon")
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 // middleware
 app.use(bodyParser.json());
 
-// FUNCTIONS
-
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
   return Math.floor(Math.random() * 150);
-}
-
-// grab pokemon function with required stats
-function grabPokemon(datas) {
-  const pokemon = datas.map((data) => ({
-    id: data.id,
-    name: data.name,
-    type: data.types.map((type) => type.type.name),
-    moves: [
-      data.moves[0]?.move.name ? data.moves[0].move.name : "Tackle",
-      data.moves[1]?.move.name ? data.moves[1].move.name : "Tackle",
-      data.moves[2]?.move.name ? data.moves[2].move.name : "Tackle",
-      data.moves[3]?.move.name ? data.moves[3].move.name : "Tackle",
-    ],
-    hp: data.stats[0].base_stat,
-    attack: data.stats[1].base_stat,
-    defense: data.stats[2].base_stat,
-    speed: data.stats[5].base_stat,
-  }));
-  return pokemon;
 }
 
 // function for testing purposes for adding a single pokemon
@@ -52,6 +31,12 @@ function getPokemon(datas) {
     defense: datas.stats[2].base_stat,
     speed: datas.stats[5].base_stat,
   };
+}
+
+// grab pokemon function with required stats
+function grabPokemon(datas) {
+  const pokemon = datas.map((data) => getPokemon(data));
+  return pokemon;
 }
 
 module.exports = function (app, passport, db) {

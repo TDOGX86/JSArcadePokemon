@@ -137,7 +137,7 @@ module.exports = function (app, passport, db) {
         await battleSchema.updateOne({ ...filter }, newBattle, {
           upsert: true,
         });
-        res.status(200).render("pokemon.ejs", newBattle);
+        res.status(200).render("pokemon.ejs", { newBattle });
       })
       .catch((err) => console.log(err));
   });

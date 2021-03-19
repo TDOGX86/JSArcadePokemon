@@ -6,6 +6,7 @@ const flash        = require("connect-flash");
 const morgan       = require("morgan");
 const cookieParser = require("cookie-parser");
 const session      = require("express-session");
+const path         = require('path')
 const configDB     = require("./app/config/database.js");
 
 // INSTANCE
@@ -17,10 +18,13 @@ const port = process.env.PORT || 8100;
 // DATABASE
 mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, database) => {
     if (err) return console.error(err);
+
+    const db = database
     
     require("./app/config/passport")(passport);   // passport configuration
     
     // RENDER ENGINE
+    app.set('views', './views');
     app.set("view engine", "ejs");                // set up ejs for templating
 
     // MIDDLEWARE
@@ -38,13 +42,13 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());                             //  for flash messages in session
-    
+
     // CRUD ACCESS ROUTES
-    require("./app/routes/main.js")   (app, passport, database);
-    require("./app/routes/pokemon.js")(app, passport, database);
-    require("./app/routes/battle.js") (app, passport, database);
+    require("./app/routes/main.js")(app, passport, db);
+    require("./app/routes/pokemon.js")(app, passport, db);
+    require("./app/routes/battle.js")(app, passport, db);
   }
 );
-
+  
 app.listen(port);
 console.log("The magic happens on port " + port);

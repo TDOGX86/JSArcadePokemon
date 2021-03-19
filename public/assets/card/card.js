@@ -1,7 +1,6 @@
 /* Credit to Simon Goellner, https://codepen.io/simeydotme/pen/PrQKgo, for creating the following javascript */
 const pokeCards = [...document.querySelectorAll(".card")];
 const style     = document.querySelector("style")
-const selected  = []
 
 pokeCards.forEach(card => {
     
@@ -28,28 +27,13 @@ pokeCards.forEach(card => {
             e.target.classList.add('selected')
         }
     })
-    card.addEventListener('mouseup', (e) => {
+    card.addEventListener('mouseup', () => {
         const selected = [...document.querySelectorAll(".selected")]
 
         if (selected.length == 6) {
-          fetch('/team', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                team: `${selected.map( card => card.getAttribute('data-id')).join('-')}`
-            })
-          })
+        // edit for when 6 are clicked
+          fetch('/cool')
         }
-
+    
     })
 })
-
-fetch('/displayteam')
-    .then(res => res.json())
-    .then(({ cards: cardUrls }) => {
-        cardUrls.forEach((url, index) => {
-            pokeCards[index]?.setAttribute('style', `background-image: url(${url})`)
-        })
-    })

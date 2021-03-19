@@ -1,5 +1,4 @@
 const fetch         = require("node-fetch");
-const pokemonTCG    = require("pokemontcgsdk");
 const pokeCard      = require("../config/pokeCard");
 const pokemonSchema = require("../models/pokemon");
 const battleSchema  = require("../models/battle.js");
@@ -7,7 +6,7 @@ let url = "https://pokeapi.co/api/v2/pokemon/";
 
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
-  return Math.floor(Math.random() * 150);
+  return Math.ceil(Math.random() * 150);
 }
 
 // function for testing purposes for adding a single pokemon
@@ -39,9 +38,7 @@ function grabPokemon(datas) {
 module.exports = function (app, passport, db) {
   app.get("/displayteam", async (req, res) => {
     const promises = [];
-    const promisesCards = [];
-    const monsterNames = [];
-    const pokemonCount = 12;
+    const pokemonCount = 9;
 
     for (let i = 1; i < pokemonCount; i++) {
       const pokeURL = `${url}${i}`;
@@ -49,31 +46,19 @@ module.exports = function (app, passport, db) {
     }
 
     await Promise.all(promises).then((results) => {
-      results.forEach(pokemon => monsterNames.push(pokemon.name))
-    });
-
-    pokemonTCG.configure({ apikey: pokeCard.apikey })
-
-    for (const monster of monsterNames) {
-      promisesCards.push(pokemonTCG.card.where({ q: `name:${monster.split("/-|'|\./gi")[0]}` })
-        .then(result => result.data[0]?.images?.small)
-    )};
-
-    await Promise.all(promisesCards).then((results) => {
-      res.status(200).send({ cards: results })
+      res.status(200).send({ monster: results })
     });
   });
 
-  app.get("/cool", isLoggedIn, async (req, res) => {
-    let team = "1-2-3-4-5-6".split("-");
+  app.get("/cool/:team", isLoggedIn, async (req, res) => {
+    let team = req.params.team.split("-");
     let randomOpponent = new Array(6)
       .fill()
       .map((_) => randomPokemonGenerator());
     let promises = [...team, ...randomOpponent].map((num) => {
       return fetch(url + num).then((info) => info.json());
     });
-    await Promise.all(promises)
-      .then(async (team) => {
+    await Promise.all(promises).then( async (team) => {
         let filter = {
           email: req.user.local.email,
         };
@@ -87,7 +72,7 @@ module.exports = function (app, passport, db) {
         });
         res.render("pokemon.ejs", { newBattle });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.message));
   });
 
   // add 6 random pokemon
@@ -119,27 +104,26 @@ module.exports = function (app, passport, db) {
   app.post("/team", isLoggedIn, async (req, res) => {
     let team = req.body.team.split("-");
     let randomOpponent = new Array(6)
-      .fill()
-      .map((_) => randomPokemonGenerator());
+    .fill()
+    .map((_) => randomPokemonGenerator());
     let promises = [...team, ...randomOpponent].map((num) => {
       return fetch(url + num).then((info) => info.json());
     });
-    await Promise.all(promises)
-      .then(async (team) => {
-        let filter = {
-          email: req.user.local.email,
-        };
-        let newBattle = {
-          ...filter,
-          player1: grabPokemon(team).slice(0, 6),
-          player2: grabPokemon(team).slice(6),
-        };
-        await battleSchema.updateOne({ ...filter }, newBattle, {
-          upsert: true,
-        });
-        res.status(200).render("pokemon.ejs", { newBattle });
-      })
-      .catch((err) => console.log(err));
+    await Promise.all(promises).then(async (team) => {
+      let filter = {
+        email: req.user.local.email,
+      }
+      let newBattle = {
+        ...filter,
+        player1: grabPokemon(team).slice(0, 6),
+        player2: grabPokemon(team).slice(6),
+      }
+      await battleSchema.updateOne({ ...filter }, newBattle, {
+        upsert: true,
+      });
+      res.render('pokemon.ejs', { newBattle })
+    })
+    .catch((err) => console.error(err.message));
   });
 };
 

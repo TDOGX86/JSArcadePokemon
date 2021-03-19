@@ -28,6 +28,7 @@ mongoose.connect(
 
     // RENDER ENGINE
     app.set("views", __dirname + "/views");
+    console.log("");
     app.set("view engine", "ejs"); // set up ejs for templating
 
     // MIDDLEWARE

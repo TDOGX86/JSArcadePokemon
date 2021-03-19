@@ -1,7 +1,6 @@
 /* Credit to Simon Goellner, https://codepen.io/simeydotme/pen/PrQKgo, for creating the following javascript */
 const pokeCards = [...document.querySelectorAll(".card")];
 const style     = document.querySelector("style")
-const selected  = []
 
 pokeCards.forEach(card => {
     

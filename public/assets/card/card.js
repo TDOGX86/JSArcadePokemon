@@ -32,7 +32,6 @@ pokeCards.forEach(card => {
         const selected = [...document.querySelectorAll(".selected")]
 
         if (selected.length == 6) {
-            console.log(`${selected.map( card => card.getAttribute('data-id')).join('-')}`)
           fetch('/team', {
             method: "POST",
             headers: {

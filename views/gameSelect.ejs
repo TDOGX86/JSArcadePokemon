@@ -8,14 +8,43 @@
   <body style="background-color: black">
     <!-- Header
     ============================================= -->
-    <header><%- include('./partials/A-header'); %></header>
+    <header>
+        <%- include('./partials/A-header'); %>
+        <link rel="stylesheet" href="../../assets/gameSelect/background.css" type="text/css" />
+    </header>
 
     <!-- Content
     ============================================= -->
     <main>
-      <h1>Game Select</h1>
-      <a href="/pokemon"><button>Pokemon</button></a>
-      <a href="/#"><button disabled>Quiz</button></a>
+
+    <section id="slider" class="slider-element slider-parallax min-vh-60 min-vh-md-100 dark include-header slider-parallax-visible" style="background: url('https://images.unsplash.com/photo-1572289758057-3e0f4327833b?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8YXJjYWRlfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60') center center / cover no-repeat; margin-top: -102px;">
+        <div class="slider-inner" style="transform: translate3d(0px, 0px, 0px);">
+    
+            <div class="vertical-middle slider-element-fade">
+                <div class="container-fluid py-5">
+                    <div class="heading-block text-center border-bottom-0">
+                        <h2 data-animate="fadeInUp" class="fadeInUp animated" style="color: white;">Choose your Game</h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="slider-caption slider-caption-center" style="height: 100vh;">
+            <h2 data-animate="fadeInUp" class="fadeInUp animated"><a href="/pokemon"><button>Pokemon</button></a></h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="slider-caption slider-caption-center" style="height: 100vh;">
+            <h2 data-animate="fadeInUp" class="fadeInUp animated"><a href="/#"><button disabled>Quiz</button></a></h2>
+        </div>
+    </div>
+
     </main>
   </body>
 </html>
+
+

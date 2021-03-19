@@ -27,7 +27,7 @@ mongoose.connect(
     require("./app/config/passport")(passport); // passport configuration
 
     // RENDER ENGINE
-    app.set("views", "./views");
+    app.set("views", __dirname + "/views");
     app.set("view engine", "ejs"); // set up ejs for templating
 
     // MIDDLEWARE

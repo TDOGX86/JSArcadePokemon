@@ -27,29 +27,13 @@ pokeCards.forEach(card => {
             e.target.classList.add('selected')
         }
     })
-    card.addEventListener('mouseup', (e) => {
+    card.addEventListener('mouseup', () => {
         const selected = [...document.querySelectorAll(".selected")]
 
         if (selected.length == 6) {
-          fetch('/team')
-            .then(res => res.json())
+        // edit for when 6 are clicked
+          fetch('/cool')
         }
     
     })
 })
-
-// method: "POST",
-// headers: {
-//     'Content-Type': 'application/json'
-// },
-// body: JSON.stringify({
-//     team: `${selected.map( card => card.getAttribute('data-id')).join('-')}`
-// })
-
-fetch('/displayteam')
-    .then(res => res.json())
-    .then(({ cards: cardUrls }) => {
-        cardUrls.forEach((url, index) => {
-            pokeCards[index]?.setAttribute('style', `background-image: url(${url})`)
-        })
-    })

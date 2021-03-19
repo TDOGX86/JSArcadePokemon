@@ -1,5 +1,4 @@
 const fetch         = require("node-fetch");
-const pokemonTCG    = require("pokemontcgsdk");
 const pokeCard      = require("../config/pokeCard");
 const pokemonSchema = require("../models/pokemon");
 const battleSchema  = require("../models/battle.js");
@@ -39,8 +38,6 @@ function grabPokemon(datas) {
 module.exports = function (app, passport, db) {
   app.get("/displayteam", async (req, res) => {
     const promises = [];
-    const promisesCards = [];
-    const monsterNames = [];
     const pokemonCount = 9;
 
     for (let i = 1; i < pokemonCount; i++) {
@@ -49,18 +46,7 @@ module.exports = function (app, passport, db) {
     }
 
     await Promise.all(promises).then((results) => {
-      results.forEach(pokemon => monsterNames.push(pokemon.name))
-    });
-
-    pokemonTCG.configure({ apikey: pokeCard.apikey })
-
-    for (const monster of monsterNames) {
-      promisesCards.push(pokemonTCG.card.where({ q: `name:${monster.split("/-|'|\./gi")[0]}` })
-        .then(result => result.data[0]?.images?.small)
-    )};
-
-    await Promise.all(promisesCards).then((results) => {
-      res.status(200).send({ cards: results })
+      res.status(200).send({ monster: results })
     });
   });
 

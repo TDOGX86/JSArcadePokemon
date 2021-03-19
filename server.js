@@ -18,6 +18,8 @@ const port = process.env.PORT || 8100;
 // DATABASE
 mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, database) => {
     if (err) return console.error(err);
+
+    const db = database
     
     require("./app/config/passport")(passport);   // passport configuration
     
@@ -42,9 +44,9 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     app.use(flash());                             //  for flash messages in session
 
     // CRUD ACCESS ROUTES
-    require("./app/routes/main")   (app, passport, database);
-    require("./app/routes/pokemon")(app, passport, database);
-    require("./app/routes/battle") (app, passport, database);
+    require("./app/routes/main")(app, passport, db);
+    require("./app/routes/pokemon")(app, passport, db);
+    require("./app/routes/battle")(app, passport, db);
   }
 );
   

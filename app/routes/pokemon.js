@@ -41,7 +41,7 @@ module.exports = function (app, passport, db) {
     const promises = [];
     const promisesCards = [];
     const monsterNames = [];
-    const pokemonCount = 152;
+    const pokemonCount = 12;
 
     for (let i = 1; i < pokemonCount; i++) {
       const pokeURL = `${url}${i}`;

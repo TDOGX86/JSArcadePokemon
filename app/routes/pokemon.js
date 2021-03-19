@@ -1,8 +1,8 @@
-const fetch         = require("node-fetch");
-const pokemonTCG    = require("pokemontcgsdk");
-const pokeCard      = require("../config/pokeCard");
+const fetch = require("node-fetch");
+const pokemonTCG = require("pokemontcgsdk");
+const pokeCard = require("../config/pokeCard");
 const pokemonSchema = require("../models/pokemon");
-const battleSchema  = require("../models/battle.js");
+const battleSchema = require("../models/battle.js");
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
 // function to call a random pokemon from the API
@@ -49,18 +49,21 @@ module.exports = function (app, passport, db) {
     }
 
     await Promise.all(promises).then((results) => {
-      results.forEach(pokemon => monsterNames.push(pokemon.name))
+      results.forEach((pokemon) => monsterNames.push(pokemon.name));
     });
 
-    pokemonTCG.configure({ apikey: pokeCard.apikey })
+    pokemonTCG.configure({ apikey: pokeCard.apikey });
 
     for (const monster of monsterNames) {
-      promisesCards.push(pokemonTCG.card.where({ q: `name:${monster.split("/-|'|\./gi")[0]}` })
-        .then(result => result.data[0]?.images?.small)
-    )};
+      promisesCards.push(
+        pokemonTCG.card
+          .where({ q: `name:${monster.split("/-|'|./gi")[0]}` })
+          .then((result) => result.data[0]?.images?.small)
+      );
+    }
 
     await Promise.all(promisesCards).then((results) => {
-      res.status(200).send({ cards: results })
+      res.status(200).send({ cards: results });
     });
   });
 
@@ -86,6 +89,32 @@ module.exports = function (app, passport, db) {
           upsert: true,
         });
         res.render("pokemon.ejs", { newBattle });
+      })
+      .catch((err) => console.log(err));
+  });
+
+  app.get("/cool/:team", isLoggedIn, async (req, res) => {
+    let team = req.params.team.split("-");
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
+      return fetch(url + num).then((info) => info.json());
+    });
+    await Promise.all(promises)
+      .then(async (team) => {
+        let filter = {
+          email: req.user.local.email,
+        };
+        let newBattle = {
+          ...filter,
+          player1: grabPokemon(team).slice(0, 6),
+          player2: grabPokemon(team).slice(6),
+        };
+        await battleSchema.updateOne({ ...filter }, newBattle, {
+          upsert: true,
+        });
+        res.render("pokemon.ejs", newBattle);
       })
       .catch((err) => console.log(err));
   });

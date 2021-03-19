@@ -36,18 +36,11 @@ function grabPokemon(datas) {
 }
 
 module.exports = function (app, passport, db) {
-  app.get("/displayteam", async (req, res) => {
-    const promises = [];
-    const pokemonCount = 9;
-
-    for (let i = 1; i < pokemonCount; i++) {
-      const pokeURL = `${url}${i}`;
-      promises.push(fetch(pokeURL).then((res) => res.json()));
-    }
-
-    await Promise.all(promises).then((results) => {
-      res.status(200).send({ monster: results })
-    });
+  app.get("/pokemon", (req, res) => {
+    pokemonSchema.find({})
+      .then(result => {
+        res.render('pokemon.ejs', { pokemon: result })
+      })
   });
 
   app.get("/cool", isLoggedIn, async (req, res) => {
@@ -121,7 +114,7 @@ module.exports = function (app, passport, db) {
       await battleSchema.updateOne({ ...filter }, newBattle, {
         upsert: true,
       });
-      res.render('pokemon.ejs', { newBattle })
+      res.render('index.ejs')
     })
     .catch((err) => console.error(err.message));
   });

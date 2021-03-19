@@ -13,7 +13,21 @@
     <!-- Content
     ============================================= -->
     <main>
+      <div class="fancy-title title-center title-border" style="height: 100vh;">
+        <h3>Select your team</h3>
+      </div>
       
+      <div class="content-wrap">
+        <div class="container-wrap">
+          <div class="container">
+      
+          <div class="masonry-thumbs grid-container grid-6 has-init-isotope" data-lightbox="gallery" style="position: relative; height: 1392.42px;">
+              <% for (const monster of pokemon){ %>
+                <%- include('./partials/card', { pic: monster.imgs[0], id: monster.id }) %>
+              <% } %>
+          </div>
+        </div>
+      </div>
     </main>
   </body>
 </html>

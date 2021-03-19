@@ -4,6 +4,7 @@
   ============================================= -->
   <head>
     <%- include('./partials/head', { title: 'Arcade' }); %>
+    <link rel="stylesheet" href="../../assets/index/background.css" type="text/css" />
   </head>
   <body style="background-color: black">
     <!-- Header
@@ -13,8 +14,28 @@
     <!-- Content
     ============================================= -->
     <main>
-      <h1>Welcome to JS Arcade</h1>
-      <h2>Please login and enjoy!</h2>
+      <link href="../public/assets/index/background.css" />
+      <section id="slider" class="slider-element min-vh-100 dark include-header" style="margin-top: -102px;">
+        <div class="slider-inner">
+      
+          <div class="container">
+            <div class="slider-caption slider-caption-center">
+              <h2 data-animate="fadeInUp" class="fadeInUp animated">Welcome to</h2>
+            </div>
+          </div>
+      
+          <div class="video-wrap" style="z-index: 1;">
+            <video preload="auto" loop="" autoplay="" muted="" style="width: 1793.78px; height: 1009px; left: -165.389px;">
+              <img src="https://i.pinimg.com/originals/96/ec/36/96ec36d867a47f62a6d940c38768f62a.gif" >
+            </video>
+            <div class="video-overlay" style="background-color: rgba(0,0,0,0.45);"></div>
+          </div>
+      
+        </div>
+      </section>
     </main>
+
   </body>
 </html>
+
+

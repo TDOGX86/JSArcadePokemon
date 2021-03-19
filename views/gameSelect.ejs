@@ -3,9 +3,9 @@
   <!-- Head
   ============================================= -->
   <head>
-    <%- include('./partials/head', { title: 'Profile' }); %>
+    <%- include('./partials/head', { title: 'Arcade' }); %>
   </head>
-  <body>
+  <body style="background-color: black">
     <!-- Header
     ============================================= -->
     <header><%- include('./partials/A-header'); %></header>
@@ -13,7 +13,9 @@
     <!-- Content
     ============================================= -->
     <main>
-      <%- include('./partials/profile'); %>
+      <h1>Game Select</h1>
+      <a href="/pokemon"><button>Pokemon</button></a>
+      <a href="/#"><button disabled>Quiz</button></a>
     </main>
   </body>
 </html>

@@ -9,9 +9,9 @@ module.exports = function (app, passport, db) {
       user: req.user,
     });
   });
-  //====================Pokemon=========================
-  app.get("/pokemon", function (req, res) {
-    res.render("pokemon.ejs");
+  //====================Game Select=========================
+  app.get("/gameSelect", function (req, res) {
+    res.render("gameSelect.ejs");
   });
   //====================LOGOUT=========================
   app.get("/logout", function (req, res) {
@@ -26,7 +26,7 @@ module.exports = function (app, passport, db) {
   app.post(
     "/login",
     passport.authenticate("local-login", {
-      successRedirect: "/profile",
+      successRedirect: "/gameSelect",
       failureRedirect: "/login",
       failureFlash: true,
     })
@@ -39,7 +39,7 @@ module.exports = function (app, passport, db) {
   app.post(
     "/signup",
     passport.authenticate("local-signup", {
-      successRedirect: "/profile",
+      successRedirect: "/gameSelect",
       failureRedirect: "/signup",
       failureFlash: true,
     })

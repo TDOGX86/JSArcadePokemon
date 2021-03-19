@@ -1,32 +1,38 @@
 <div class="fancy-title title-center title-border">
-  <h3>Catch em All</h3>
+  <h3>Select your team</h3>
 </div>
 
 <div class="content-wrap">
   <div class="container clearfix">
-
     <div class="grid-filter-wrap">
-
       <!-- Portfolio Filter
       ============================================= -->
       <ul class="grid-filter" data-container="#portfolio">
         <li class="activeFilter"><a href="#" data-filter="*">Show All</a></li>
         <!-- <li class=""><a href="#" data-filter=".pf-icons">Icons</a></li> -->
-      </ul><!-- .grid-filter end -->
+      </ul>
+      <!-- .grid-filter end -->
 
       <div class="grid-shuffle rounded" data-container="#portfolio">
         <i class="icon-random"></i>
       </div>
-
     </div>
 
     <!-- Portfolio Items
     ============================================= -->
-    <div id="portfolio" class="portfolio row grid-container gutter-5 has-init-isotope" data-layout="fitRows" style="position: relative; height: 1039.88px;">
-      <% for (let i = 0; i < 150; i++)  { %>
-        
+    <div
+      id="portfolio"
+      class="portfolio row grid-container gutter-5 has-init-isotope"
+      data-layout="fitRows"
+      style="position: relative; height: 1039.88px"
+    >
+      <% for (let i = 0; i < 150; i++) { %>
+
       <!-- Portfolio Item: Start -->
-      <article class="portfolio-item col-lg-4 col-md-6 col-sm-8 col-12 pf-media pf-icons" style="position: absolute; left: 0%; top: 0px;">
+      <article
+        class="portfolio-item col-lg-4 col-md-6 col-sm-8 col-12 pf-media pf-icons"
+        style="position: absolute; left: 0%; top: 0px"
+      >
         <!-- Card: Start -->
         <%- include('./card', { id: i + 1 }) %>
         <!-- Card: End -->
@@ -37,7 +43,7 @@
       <!-- Portfolio Item: End -->
       <% } %>
       <style class="hover"></style>
-    </div><!-- #portfolio end -->
-
+    </div>
+    <!-- #portfolio end -->
   </div>
 </div>

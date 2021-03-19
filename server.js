@@ -24,7 +24,7 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     require("./app/config/passport")(passport);   // passport configuration
     
     // RENDER ENGINE
-    app.set('views', __dirname + '/views');
+    app.set('views', './views');
     app.set("view engine", "ejs");                // set up ejs for templating
 
     // MIDDLEWARE
@@ -44,9 +44,9 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     app.use(flash());                             //  for flash messages in session
 
     // CRUD ACCESS ROUTES
-    require("./app/routes/main")(app, passport, db);
-    require("./app/routes/pokemon")(app, passport, db);
-    require("./app/routes/battle")(app, passport, db);
+    require("./app/routes/main.js")(app, passport, db);
+    require("./app/routes/pokemon.js")(app, passport, db);
+    require("./app/routes/battle.js")(app, passport, db);
   }
 );
   

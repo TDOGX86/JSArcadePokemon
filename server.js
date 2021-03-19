@@ -49,6 +49,9 @@ mongoose.connect(
     app.use(flash()); //  for flash messages in session
 
     // CRUD ACCESS ROUTES
+    app.get("/", function (req, res) {
+      res.render("index.ejs");
+    });
     require("./app/routes/main.js")(app, passport, db);
     require("./app/routes/pokemon.js")(app, passport, db);
     require("./app/routes/battle.js")(app, passport, db);

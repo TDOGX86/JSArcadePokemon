@@ -13,6 +13,10 @@ module.exports = function (app, passport, db) {
   app.get("/gameSelect", function (req, res) {
     res.render("gameSelect.ejs");
   });
+  //====================Pokemon=========================
+  app.get("/runner", function (req, res) {
+    res.render("runner.ejs");
+  });
   //====================LOGOUT=========================
   app.get("/logout", function (req, res) {
     req.logout();

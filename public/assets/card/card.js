@@ -31,19 +31,20 @@ pokeCards.forEach(card => {
         const selected = [...document.querySelectorAll(".selected")]
 
         if (selected.length == 6) {
-          fetch('/team', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                team: `${selected.map( card => card.getAttribute('data-id')).join('-')}`
-            })
-          })
+          fetch('/team')
+            .then(res => res.json())
         }
-
+    
     })
 })
+
+// method: "POST",
+// headers: {
+//     'Content-Type': 'application/json'
+// },
+// body: JSON.stringify({
+//     team: `${selected.map( card => card.getAttribute('data-id')).join('-')}`
+// })
 
 fetch('/displayteam')
     .then(res => res.json())

@@ -42,12 +42,11 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
     app.use(flash());                             //  for flash messages in session
 
     // CRUD ACCESS ROUTES
-    require("./app/routes/main.js")   (app, passport, database);
-    require("./app/routes/pokemon.js")(app, passport, database);
-    require("./app/routes/battle.js") (app, passport, database);
+    require("./app/routes/main")   (app, passport, database);
+    require("./app/routes/pokemon")(app, passport, database);
+    require("./app/routes/battle") (app, passport, database);
   }
 );
-
   
 app.listen(port);
 console.log("The magic happens on port " + port);

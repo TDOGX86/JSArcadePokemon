@@ -1,8 +1,10 @@
-const fetch = require("node-fetch");
-const pokeCard = require("../config/pokeCard");
+const fetch         = require("node-fetch");
+const pokemonTCG    = require("pokemontcgsdk");
+const pokeCard      = require("../config/pokeCard");
 const pokemonSchema = require("../models/pokemon");
+const battleSchema  = require("../models/battle.js");
 let url = "https://pokeapi.co/api/v2/pokemon/";
-const battleSchema = require("../models/battle.js");
+
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
   return Math.floor(Math.random() * 150);
@@ -15,10 +17,10 @@ function getPokemon(datas) {
     name: datas.name,
     type: datas.types.map((type) => type.type.name),
     moves: [
-      datas.moves[0]?.move.name ? datas.moves[0].move.name : "Tackle",
-      datas.moves[1]?.move.name ? datas.moves[1].move.name : "Tackle",
-      datas.moves[2]?.move.name ? datas.moves[2].move.name : "Tackle",
-      datas.moves[3]?.move.name ? datas.moves[3].move.name : "Tackle",
+      datas.moves[0]?.move.name,
+      datas.moves[1]?.move.name,
+      datas.moves[2]?.move.name,
+      datas.moves[3]?.move.name,
     ],
     imgs: [datas.sprites.front_default, datas.sprites.back_default],
     hp: datas.stats[0].base_stat,
@@ -37,24 +39,28 @@ function grabPokemon(datas) {
 module.exports = function (app, passport, db) {
   app.get("/displayteam", async (req, res) => {
     const promises = [];
+    const promisesCards = [];
+    const monsterNames = [];
     const pokemonCount = 152;
+
     for (let i = 1; i < pokemonCount; i++) {
       const pokeURL = `${url}${i}`;
       promises.push(fetch(pokeURL).then((res) => res.json()));
     }
+
     await Promise.all(promises).then((results) => {
-      res.status(200).render("profile.ejs", { team: grabPokemon(results) });
+      results.forEach(pokemon => monsterNames.push(pokemon.name))
     });
-  });
 
-  app.get("/getCards", async (req, res) => {
-    const promises = [];
-    const pokeURL = `${pokeCard.url}`;
+    pokemonTCG.configure({ apikey: pokeCard.apikey })
 
-    promises.push(fetch(pokeURL).then((res) => res.json()));
+    for (const monster of monsterNames) {
+      promisesCards.push(pokemonTCG.card.where({ q: `name:${monster.split("/-|'|\./gi")[0]}` })
+        .then(result => result.data[0]?.images?.small)
+    )};
 
-    await Promise.all(promises).then((results) => {
-      res.status(200).send({ team: results });
+    await Promise.all(promisesCards).then((results) => {
+      res.status(200).send({ cards: results })
     });
   });
 

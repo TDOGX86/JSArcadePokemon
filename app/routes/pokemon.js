@@ -41,7 +41,7 @@ module.exports = function (app, passport, db) {
     const promises = [];
     const promisesCards = [];
     const monsterNames = [];
-    const pokemonCount = 152;
+    const pokemonCount = 12;
 
     for (let i = 1; i < pokemonCount; i++) {
       const pokeURL = `${url}${i}`;
@@ -85,7 +85,7 @@ module.exports = function (app, passport, db) {
         await battleSchema.updateOne({ ...filter }, newBattle, {
           upsert: true,
         });
-        res.status(200).render("pokemon.ejs", newBattle);
+        res.render("pokemon.ejs", { newBattle });
       })
       .catch((err) => console.log(err));
   });
@@ -137,7 +137,7 @@ module.exports = function (app, passport, db) {
         await battleSchema.updateOne({ ...filter }, newBattle, {
           upsert: true,
         });
-        res.status(200).render("pokemon.ejs", newBattle);
+        res.status(200).render("pokemon.ejs", { newBattle });
       })
       .catch((err) => console.log(err));
   });

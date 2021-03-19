@@ -6,16 +6,17 @@
     <%- include('./partials/head', { title: 'Pokemon' }); %>
   </head>
   <body>
+
     <!-- Header
     ============================================= -->
-    <header><%- include('./partials/P-header'); %></header>
+    <header>
+      <%- include('./partials/P-header'); %>
+    </header>
 
     <!-- Content
     ============================================= -->
-
     <main>
-      <%- include('./partials/card-car', {selectTeam:"Select your Team"}) %>
+      <%- include('./partials/card-car'); %>
     </main>
-    <%-include('./partials/user-cards'); %>
   </body>
 </html>

@@ -3,6 +3,7 @@ const pokeCard = require("../config/pokeCard");
 const pokemonSchema = require("../models/pokemon");
 let url = "https://pokeapi.co/api/v2/pokemon/";
 const battleSchema = require("../models/battle.js");
+const hpSchema = require("../models/hp.js");
 // function to call a random pokemon from the API
 function randomPokemonGenerator() {
   return Math.floor(Math.random() * 150);
@@ -134,6 +135,47 @@ module.exports = function (app, passport, db) {
         res.status(200).render("pokemon.ejs", newBattle);
       })
       .catch((err) => console.log(err));
+  });
+
+  //HPS
+
+  app.get("/hps", async (req, res) => {
+    console.log();
+    let filter = { email: "halloween@halloween.com" };
+    let team = "1-2-3-4-5-6".split("-");
+    let randomOpponent = new Array(6)
+      .fill()
+      .map((_) => randomPokemonGenerator());
+    let promises = [...team, ...randomOpponent].map((num) => {
+      return fetch(url + num).then((info) => info.json());
+    });
+    await Promise.all(promises).then(async (info) => {
+      let data = {
+        ...filter,
+        hp: info
+          .reduce(
+            (accum, pokemon) => accum + " " + pokemon.stats[0].base_stat,
+            ""
+          )
+          .trim(),
+        attack: info
+          .reduce(
+            (accum, pokemon) => accum + " " + pokemon.stats[1].base_stat,
+            ""
+          )
+          .trim(),
+        defense: info
+          .reduce(
+            (accum, pokemon) => accum + " " + pokemon.stats[2].base_stat,
+            ""
+          )
+          .trim(),
+      };
+      await hpSchema.updateOne({ email: "halloween@halloween.com" }, data, {
+        upsert: true,
+      });
+      res.status(200).send(data);
+    });
   });
 };
 

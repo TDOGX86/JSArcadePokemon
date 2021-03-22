@@ -15,7 +15,7 @@ module.exports = function (app, passport, db) {
   });
   //====================Pokemon=========================
   app.get("/runner", function (req, res) {
-    res.render("runner.ejs");
+    res.redirect("https://pokemon-lobby.herokuapp.com/");
   });
   //====================LOGOUT=========================
   app.get("/logout", function (req, res) {
